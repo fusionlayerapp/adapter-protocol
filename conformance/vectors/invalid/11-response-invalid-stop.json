@@ -1,0 +1,13 @@
+{
+  "_description": "INVALID: AdapterResponse with stopReason 'cancelled' is not in the allowed enum. Must fail validation.",
+  "_schema": "response",
+  "_expect": "invalid",
+  "content": "",
+  "model": "claude-3-5-sonnet",
+  "usage": {
+    "input_tokens": 20,
+    "output_tokens": 0
+  },
+  "costUsd": 0.00002,
+  "stopReason": "cancelled"
+}

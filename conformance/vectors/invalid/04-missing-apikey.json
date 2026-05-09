@@ -1,0 +1,9 @@
+{
+  "_description": "INVALID: AdapterRequest missing required 'apiKey' field. Must fail validation.",
+  "_schema": "request",
+  "_expect": "invalid",
+  "model": "gpt-4o",
+  "messages": [
+    { "role": "user", "content": "Hello" }
+  ]
+}

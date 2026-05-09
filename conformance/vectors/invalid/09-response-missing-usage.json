@@ -1,0 +1,8 @@
+{
+  "_description": "INVALID: AdapterResponse missing required 'usage' field. Must fail validation.",
+  "_schema": "response",
+  "_expect": "invalid",
+  "content": "Hello world",
+  "model": "gpt-4o",
+  "costUsd": 0.0001
+}

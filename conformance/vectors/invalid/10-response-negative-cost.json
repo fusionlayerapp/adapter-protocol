@@ -1,0 +1,12 @@
+{
+  "_description": "INVALID: AdapterResponse with costUsd: -1 violates minimum: 0. Must fail validation.",
+  "_schema": "response",
+  "_expect": "invalid",
+  "content": "Hello",
+  "model": "gpt-4o",
+  "usage": {
+    "input_tokens": 5,
+    "output_tokens": 3
+  },
+  "costUsd": -1
+}

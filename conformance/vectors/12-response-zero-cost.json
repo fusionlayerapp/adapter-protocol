@@ -1,0 +1,12 @@
+{
+  "_description": "AdapterResponse from a local model where cost cannot be computed; costUsd must be 0.",
+  "_schema": "response",
+  "content": "Hello! How can I help you today?",
+  "model": "llama-3.1-8b-instruct",
+  "usage": {
+    "input_tokens": 5,
+    "output_tokens": 9
+  },
+  "costUsd": 0,
+  "stopReason": "end_turn"
+}

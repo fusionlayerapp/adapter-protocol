@@ -1,0 +1,14 @@
+{
+  "name": "@hn2/adapter-protocol",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI Adapter Protocol schemas and conformance harness",
+  "scripts": {
+    "validate": "node conformance/validate.js",
+    "test": "node conformance/validate.js"
+  },
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1"
+  }
+}

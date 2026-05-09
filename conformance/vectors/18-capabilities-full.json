@@ -1,0 +1,5 @@
+{
+  "_description": "CapabilitiesManifest: all standard capability flags declared.",
+  "_schema": "capabilities",
+  "_value": ["streaming", "tools", "vision", "pdf", "reasoning_effort", "web_search", "json_mode", "cache_breakpoints"]
+}

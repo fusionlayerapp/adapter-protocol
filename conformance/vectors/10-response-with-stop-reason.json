@@ -1,0 +1,12 @@
+{
+  "_description": "AdapterResponse that stopped naturally at end of turn.",
+  "_schema": "response",
+  "content": "Sure, here is a haiku about the ocean:\n\nWaves crash on the shore\nSalt and spray fill the cool air\nSeagulls cry above",
+  "model": "claude-3-5-sonnet-20241022",
+  "usage": {
+    "input_tokens": 18,
+    "output_tokens": 32
+  },
+  "costUsd": 0.000075,
+  "stopReason": "end_turn"
+}

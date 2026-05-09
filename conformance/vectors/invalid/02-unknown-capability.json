@@ -1,6 +1,6 @@
 {
-  "_description": "INVALID: capabilities array contains an unknown capability string with no vendor prefix. Must fail validation.",
+  "_description": "INVALID: capabilities array contains an unknown string with no vendor prefix. Must fail validation.",
   "_schema": "capabilities",
   "_expect": "invalid",
-  "capabilities": ["streaming", "tools", "does_not_exist"]
+  "_value": ["streaming", "tools", "does_not_exist"]
 }
