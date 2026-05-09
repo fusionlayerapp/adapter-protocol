@@ -1,0 +1,9 @@
+{
+  "_description": "Minimal valid AdapterRequest: model + messages + apiKey only.",
+  "_schema": "request",
+  "model": "claude-3-5-sonnet",
+  "messages": [
+    { "role": "user", "content": "Hello" }
+  ],
+  "apiKey": "test-key"
+}

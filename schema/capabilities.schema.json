@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hn2.github.io/adapter-protocol/schema/1.0.0/capabilities",
+  "title": "CapabilitiesManifest",
+  "description": "Capabilities array declared by a VendorAdapter. Must be a subset of CAPABILITIES.",
+  "type": "array",
+  "uniqueItems": true,
+  "items": {
+    "type": "string",
+    "description": "A capability flag. Core flags are listed in the enum. Third-party extensions MUST use a reverse-domain prefix (e.g. 'com.example.custom_cap').",
+    "oneOf": [
+      {
+        "enum": [
+          "streaming",
+          "tools",
+          "vision",
+          "pdf",
+          "reasoning_effort",
+          "web_search",
+          "json_mode",
+          "cache_breakpoints"
+        ]
+      },
+      {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9]*\\.[a-z][a-z0-9]*\\.",
+        "description": "Third-party extension capability with reverse-domain prefix."
+      }
+    ]
+  },
+  "examples": [
+    ["streaming", "tools", "vision"],
+    ["streaming", "tools", "json_mode", "cache_breakpoints"],
+    []
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "_description": "AdapterRequest with stream: true. Adapter must declare 'streaming' capability.",
+  "_schema": "request",
+  "model": "gemini-1.5-pro",
+  "messages": [
+    { "role": "user", "content": "Write a short story about a robot." }
+  ],
+  "stream": true,
+  "temperature": 0.8,
+  "maxTokens": 1024,
+  "apiKey": "test-key"
+}

@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hn2.github.io/adapter-protocol/schema/1.0.0/request",
+  "title": "AdapterRequest",
+  "description": "Request object passed to VendorAdapter.call() or VendorAdapter.stream().",
+  "type": "object",
+  "required": ["model", "messages", "apiKey"],
+  "additionalProperties": false,
+  "properties": {
+    "model": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Model identifier as understood by the upstream provider."
+    },
+    "messages": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Conversation messages in chronological order.",
+      "items": {
+        "type": "object",
+        "required": ["role", "content"],
+        "additionalProperties": false,
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": ["user", "assistant", "system", "tool"],
+            "description": "Message author role."
+          },
+          "content": {
+            "description": "Text string for plain messages; array of content-block objects for multimodal.",
+            "oneOf": [
+              { "type": "string" },
+              {
+                "type": "array",
+                "items": { "type": "object" }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "systemPrompt": {
+      "type": "string",
+      "description": "System-level instructions prepended before messages."
+    },
+    "temperature": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 2,
+      "description": "Sampling temperature."
+    },
+    "maxTokens": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Maximum number of tokens to generate."
+    },
+    "tools": {
+      "type": "array",
+      "items": { "type": "object" },
+      "description": "Tool definitions (OpenAI tool schema convention). Only valid when adapter declares 'tools'."
+    },
+    "responseFormat": {
+      "type": "object",
+      "description": "Structured output format (OpenAI response_format convention). Only valid when adapter declares 'json_mode'."
+    },
+    "reasoning": {
+      "type": "string",
+      "enum": ["low", "medium", "high"],
+      "description": "Reasoning effort hint. Only valid when adapter declares 'reasoning_effort'."
+    },
+    "stream": {
+      "type": "boolean",
+      "description": "When true, caller intends to consume via stream(). Only valid when adapter declares 'streaming'."
+    },
+    "apiKey": {
+      "type": "string",
+      "minLength": 1,
+      "description": "API key for the upstream provider."
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "_description": "AdapterRequest with a systemPrompt.",
+  "_schema": "request",
+  "model": "gpt-4o",
+  "messages": [
+    { "role": "user", "content": "Summarize the key points." }
+  ],
+  "systemPrompt": "You are a concise assistant. Respond in bullet points only.",
+  "temperature": 0.3,
+  "maxTokens": 512,
+  "apiKey": "test-key"
+}

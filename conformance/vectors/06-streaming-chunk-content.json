@@ -1,0 +1,6 @@
+{
+  "_description": "AdapterChunk: incremental text content delta.",
+  "_schema": "chunk",
+  "type": "content",
+  "delta": "Hello"
+}

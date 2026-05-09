@@ -1,0 +1,9 @@
+{
+  "_description": "INVALID: AdapterRequest missing required 'model' field. Must fail validation.",
+  "_schema": "request",
+  "_expect": "invalid",
+  "messages": [
+    { "role": "user", "content": "Hello" }
+  ],
+  "apiKey": "test-key"
+}
