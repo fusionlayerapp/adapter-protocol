@@ -1,0 +1,29 @@
+{
+  "name": "timeout",
+  "request": {
+    "path": "/v1/chat/completions",
+    "method": "POST",
+    "body_match": {}
+  },
+  "response": {
+    "status": 200,
+    "headers": { "content-type": "application/json" },
+    "body": {},
+    "delay_ms": 5000
+  },
+  "_scenario": {
+    "id": 7,
+    "label": "timeout",
+    "description": "Timeout — mock holds connection past adapter's configured timeout, adapter raises typed timeout error",
+    "input": {
+      "model": "gpt-4o-mini",
+      "messages": [{ "role": "user", "content": "Hello" }],
+      "apiKey": "sk-test",
+      "_timeout_ms": 500
+    },
+    "assertions": {
+      "throws": true,
+      "error_code": "upstream_timeout"
+    }
+  }
+}

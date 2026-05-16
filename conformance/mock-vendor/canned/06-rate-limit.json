@@ -1,0 +1,29 @@
+{
+  "name": "rate-limit",
+  "request": {
+    "path": "/v1/chat/completions",
+    "method": "POST",
+    "body_match": {}
+  },
+  "response": {
+    "status": 429,
+    "headers": { "content-type": "application/json", "retry-after": "30" },
+    "body": {
+      "error": { "message": "Rate limit exceeded", "type": "rate_limit_error" }
+    }
+  },
+  "_scenario": {
+    "id": 6,
+    "label": "rate-limit",
+    "description": "Rate limit — mock returns 429 with Retry-After, adapter raises typed error",
+    "input": {
+      "model": "gpt-4o-mini",
+      "messages": [{ "role": "user", "content": "Hello" }],
+      "apiKey": "sk-test"
+    },
+    "assertions": {
+      "throws": true,
+      "error_code": "rate_limited"
+    }
+  }
+}

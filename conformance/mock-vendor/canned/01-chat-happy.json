@@ -1,0 +1,41 @@
+{
+  "name": "openai-chat-completion-happy",
+  "request": {
+    "path": "/v1/chat/completions",
+    "method": "POST",
+    "body_match": { "model": "gpt-4o-mini" }
+  },
+  "response": {
+    "status": 200,
+    "headers": { "content-type": "application/json" },
+    "body": {
+      "id": "chatcmpl-test001",
+      "object": "chat.completion",
+      "model": "gpt-4o-mini",
+      "choices": [
+        {
+          "index": 0,
+          "message": { "role": "assistant", "content": "Hello! How can I help you today?" },
+          "finish_reason": "stop"
+        }
+      ],
+      "usage": { "prompt_tokens": 10, "completion_tokens": 9, "total_tokens": 19 }
+    }
+  },
+  "_scenario": {
+    "id": 1,
+    "label": "chat-happy",
+    "description": "Chat completion — happy path (non-streaming)",
+    "input": {
+      "model": "gpt-4o-mini",
+      "messages": [{ "role": "user", "content": "Hello" }],
+      "apiKey": "sk-test"
+    },
+    "assertions": {
+      "content": "Hello! How can I help you today?",
+      "model": "gpt-4o-mini",
+      "usage.input_tokens": 10,
+      "usage.output_tokens": 9
+    }
+  }
+}

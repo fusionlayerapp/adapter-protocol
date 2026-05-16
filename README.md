@@ -125,6 +125,19 @@ JSON Schema 2020-12 definitions for all protocol payload types:
 
 `conformance/vectors/` contains 8 valid vectors and 3 invalid vectors. Use them to verify that your schemas and adapter implementation handle all cases correctly.
 
+## Run L2 Conformance
+
+```bash
+# Run L1 static schema validation (no adapter needed)
+node conformance/validate.js
+
+# Run L2 mock-vendor harness with the built-in reference adapter
+node conformance/validate.js --l2
+
+# Run L2 against your own adapter (must export createAdapter({ baseURL, apiKey }))
+node conformance/validate.js --l2 --adapter ./path/to/my-adapter.js
+```
+
 ---
 
 ## Known Vendors

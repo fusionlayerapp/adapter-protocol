@@ -1,0 +1,50 @@
+{
+  "name": "openai-tool-call-roundtrip",
+  "request": {
+    "path": "/v1/chat/completions",
+    "method": "POST",
+    "body_match": { "tools": [{ "type": "function" }] }
+  },
+  "response": {
+    "status": 200,
+    "headers": { "content-type": "application/json" },
+    "body": {
+      "id": "chatcmpl-tool001",
+      "object": "chat.completion",
+      "model": "gpt-4o-mini",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "id": "call_abc123",
+                "type": "function",
+                "function": { "name": "get_weather", "arguments": "{\"location\":\"London\"}" }
+              }
+            ]
+          },
+          "finish_reason": "tool_calls"
+        }
+      ],
+      "usage": { "prompt_tokens": 50, "completion_tokens": 15, "total_tokens": 65 }
+    }
+  },
+  "_scenario": {
+    "id": 3,
+    "label": "tool-call",
+    "description": "Chat completion — tool call request + tool call response round-trip",
+    "input": {
+      "model": "gpt-4o-mini",
+      "messages": [{ "role": "user", "content": "What is the weather in London?" }],
+      "tools": [{ "type": "function", "function": { "name": "get_weather", "description": "Get weather", "parameters": { "type": "object", "properties": { "location": { "type": "string" } }, "required": ["location"] } } }],
+      "apiKey": "sk-test"
+    },
+    "assertions": {
+      "stopReason": "tool_use",
+      "toolCalls_length": 1
+    }
+  }
+}
