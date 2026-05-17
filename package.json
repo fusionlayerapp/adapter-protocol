@@ -2,6 +2,7 @@
   "name": "@hn2/adapter-protocol",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "AI Adapter Protocol schemas and conformance harness",
   "scripts": {
     "validate": "node conformance/validate.js",
