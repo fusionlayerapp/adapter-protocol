@@ -62,3 +62,53 @@ See `SECURITY.md` for the current responsible disclosure contact.
 ## 7. Amending This Document
 
 Changes to `GOVERNANCE.md` follow the "breaking" process in §2 — because governance changes are, by definition, not editorial.
+
+---
+
+## 8. Capability Namespace Governance
+
+This section governs how capabilities are named, registered, and resolved across AAP adapters. See also [`CAPABILITY-REGISTRY.md`](CAPABILITY-REGISTRY.md) for the canonical list.
+
+### §8.1 Reserved Namespaces
+
+- `core.*` — reserved for AAP core. Only spec updates (via the breaking or additive process in §2) may add entries. No external registration is permitted.
+- `<vendor>.*` where `<vendor>` is the lowercased reverse-domain of a recognized AI provider (e.g., `com.anthropic.*`, `com.openai.*`, `com.google.*`, `ai.openrouter.*`). Owned by the named vendor. Adapter authors implementing those vendors MAY use those names without registration. Authors representing other organizations MUST NOT claim these namespaces.
+- All other reverse-domain namespaces require registration (see §8.2).
+
+### §8.2 Registration
+
+A custom capability is registered by opening a PR that adds a row to [`CAPABILITY-REGISTRY.md`](CAPABILITY-REGISTRY.md). The PR MUST include:
+
+- The reverse-domain capability name.
+- Owner identity (GitHub handle or organization).
+- Capability schema: a JSON Schema fragment stored at `capabilities/<reverse-domain-name>.schema.json`.
+- Semantics: what does the capability mean when a vendor reports it? What is the contract when a consumer requests it?
+- One reference implementation OR test vector demonstrating usage.
+
+Maintainers (currently `hn2`) merge after a sanity check. No design review is required for `<vendor>.*` namespaces owned by that vendor. Light review applies for all others.
+
+### §8.3 Lifecycle
+
+Each registered capability carries a `status` field with one of the following values:
+
+| Status | Meaning |
+|--------|---------|
+| `draft` | Registered but not yet implemented by any adapter. |
+| `experimental` | Implemented by at least one adapter; interface may still change. |
+| `stable` | Interface frozen. Backwards-incompatible changes require a new capability name. |
+| `deprecated` | Implementations SHOULD stop emitting; consumers SHOULD ignore. |
+
+Status transitions are PR-based. Only `experimental → stable` requires explicit maintainer approval. All other transitions (including `stable → deprecated`) may be self-merged by the owner with a single review.
+
+### §8.4 Conflict Resolution
+
+- Two PRs registering the same name: first-merged wins. The second author must rename or claim a sub-namespace.
+- A registered capability that overlaps with a later AAP core feature: the registry entry is marked `deprecated` with a pointer to the core feature. The core feature takes precedence.
+
+### §8.5 Discovery
+
+Consumers discover available capabilities through:
+
+1. [`CAPABILITY-REGISTRY.md`](CAPABILITY-REGISTRY.md) — the canonical list maintained in this repository.
+2. An adapter's `capabilities` array (per spec §4) — the subset that adapter declares it implements.
+3. Future: `capabilities.fusionlayer.app/registry.json` — a hosted JSON mirror. This is tracked as a separate follow-up and is not in scope here.

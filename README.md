@@ -164,6 +164,14 @@ To register your adapter, see [`CONFORMANCE.md`](CONFORMANCE.md).
 
 ---
 
+## Capability Registry
+
+Known capabilities (with prefix conventions, collision rules, and per-vendor support) are listed in [`CAPABILITY-REGISTRY.md`](CAPABILITY-REGISTRY.md).
+The machine-readable version is at [`conformance/capability-registry.json`](conformance/capability-registry.json).
+Namespace governance (`fl:`, `vendor:`, `custom:` prefixes) is documented in [`docs/CAPABILITY-NAMESPACE.md`](docs/CAPABILITY-NAMESPACE.md).
+
+---
+
 ## Related
 
 - [hn2/uacp](https://github.com/hn2/uacp) — Unified AI Context Protocol (conversation portability)

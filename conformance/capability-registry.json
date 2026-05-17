@@ -1,0 +1,44 @@
+[
+  {
+    "id": "fl:streaming",
+    "prefix": "fl",
+    "description": "Adapter supports server-sent chunked output via stream(). The stream() method must yield AdapterChunk objects and end with a done chunk.",
+    "supported_by": ["anthropic", "openai", "google", "openrouter"],
+    "status": "stable"
+  },
+  {
+    "id": "fl:tool-calling",
+    "prefix": "fl",
+    "description": "Adapter supports tool/function calling. Adapters must accept tools in AdapterRequest and return toolCalls in AdapterResponse when the model invokes a tool.",
+    "supported_by": ["anthropic", "openai", "google"],
+    "status": "stable"
+  },
+  {
+    "id": "fl:json-mode",
+    "prefix": "fl",
+    "description": "Adapter supports structured JSON output via the responseFormat field on AdapterRequest. The adapter guarantees the response content is valid JSON matching the provided schema.",
+    "supported_by": ["openai", "google"],
+    "status": "stable"
+  },
+  {
+    "id": "fl:vision",
+    "prefix": "fl",
+    "description": "Adapter accepts image inputs in message content blocks. Images may be provided as base64-encoded data or as URLs depending on the vendor.",
+    "supported_by": ["anthropic", "openai", "google"],
+    "status": "stable"
+  },
+  {
+    "id": "vendor:openai:json-mode",
+    "prefix": "vendor",
+    "description": "OpenAI-specific JSON mode activated via response_format: { type: 'json_object' }. Guarantees valid JSON output but does not enforce a schema. Superseded by fl:json-mode for schema-constrained output.",
+    "supported_by": ["openai"],
+    "status": "stable"
+  },
+  {
+    "id": "vendor:anthropic:extended-thinking",
+    "prefix": "vendor",
+    "description": "Anthropic extended thinking capability. The model produces an internal chain-of-thought (thinking blocks) before the final response. Activated via the thinking field on AdapterRequest.",
+    "supported_by": ["anthropic"],
+    "status": "experimental"
+  }
+]
