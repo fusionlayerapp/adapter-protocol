@@ -5,17 +5,17 @@
 // keyed by (path, method, body-shape). Used by the L2 conformance harness.
 //
 // Usage:
-//   const { startMockVendor, stopMockVendor } = require('./mock-vendor')
+//   import { startMockVendor, stopMockVendor } from './mock-vendor.js'
 //   const { baseURL } = await startMockVendor()
 //   // ... run adapter calls ...
 //   await stopMockVendor()
 
-'use strict'
+import http from 'node:http'
+import path from 'node:path'
+import fs from 'node:fs'
+import { fileURLToPath } from 'node:url'
 
-const http = require('node:http')
-const path = require('node:path')
-const fs = require('node:fs')
-
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const CANNED_DIR = path.resolve(__dirname, 'mock-vendor', 'canned')
 
 let _server = null
@@ -28,7 +28,7 @@ function loadScenarios() {
 }
 
 // Set the active scenario for the next request. Pass null to revert to auto-matching.
-function setActiveScenario(scenario) {
+export function setActiveScenario(scenario) {
   _activeScenario = scenario
 }
 
@@ -136,7 +136,7 @@ async function handleRequest(req, res) {
   res.end(JSON.stringify(response.body))
 }
 
-async function startMockVendor() {
+export async function startMockVendor() {
   _scenarios = loadScenarios()
   _server = http.createServer((req, res) => {
     handleRequest(req, res).catch(err => {
@@ -151,12 +151,10 @@ async function startMockVendor() {
   return { baseURL, scenarios: _scenarios }
 }
 
-async function stopMockVendor() {
+export async function stopMockVendor() {
   if (!_server) return
   await new Promise((resolve, reject) => _server.close(err => err ? reject(err) : resolve()))
   _server = null
   _scenarios = []
   _activeScenario = null
 }
-
-module.exports = { startMockVendor, stopMockVendor, setActiveScenario }
