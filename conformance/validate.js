@@ -4,12 +4,16 @@
 //   node conformance/validate.js              — L1 static schema validation
 //   node conformance/validate.js --l2 [--adapter <path>]  — L2 mock-vendor harness
 
-'use strict'
+import fs from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import AjvPkg from 'ajv/dist/2020.js'
+import addFormats from 'ajv-formats'
 
-const fs = require('node:fs')
-const path = require('node:path')
-const Ajv = require('ajv/dist/2020')
-const addFormats = require('ajv-formats')
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+const Ajv = AjvPkg
 
 const REPO_ROOT = path.resolve(__dirname, '..')
 const SCHEMA_DIR = path.join(REPO_ROOT, 'schema')
@@ -256,10 +260,6 @@ function makeReferenceAdapter(baseURL, apiKey) {
   }
 }
 
-function getScenarioInput(scenario) {
-  return scenario._scenario?.input || {}
-}
-
 async function runL2Scenario(adapter, scenario, ajv) {
   const s = scenario._scenario
   if (!s) return { label: scenario.name, pass: false, error: 'no _scenario metadata in canned file' }
@@ -398,7 +398,7 @@ async function runL2Scenario(adapter, scenario, ajv) {
 }
 
 async function runL2(adapterPath) {
-  const { startMockVendor, stopMockVendor, setActiveScenario } = require('./mock-vendor')
+  const { startMockVendor, stopMockVendor, setActiveScenario } = await import('./mock-vendor.js')
   const ajv = loadAjv()
 
   console.log('\nAdapter Protocol Conformance Harness — L2 Mock-Vendor')
@@ -410,7 +410,8 @@ async function runL2(adapterPath) {
   let adapter
   if (adapterPath) {
     try {
-      const adapterModule = require(path.resolve(process.cwd(), adapterPath))
+      const { pathToFileURL } = await import('node:url')
+      const adapterModule = await import(pathToFileURL(path.resolve(process.cwd(), adapterPath)).href)
       if (typeof adapterModule.createAdapter === 'function') {
         adapter = adapterModule.createAdapter({ baseURL, apiKey: 'sk-test-harness' })
       } else if (typeof adapterModule.default === 'object') {
