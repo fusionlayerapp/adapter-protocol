@@ -6,6 +6,12 @@ The AI Adapter Protocol is an open specification for normalizing AI provider API
 
 ---
 
+## Problem
+
+Every AI provider — OpenAI, Anthropic, Google, xAI, DeepSeek, local models — ships a different request/response shape, a different streaming protocol, and a different error taxonomy. Code that talks to more than one provider fills up with `if (vendor === 'openai')` branches that duplicate retry, error-mapping and cost-accounting logic per vendor, and that logic has to be re-derived for every new provider. AAP fixes this by defining one canonical `AdapterRequest` / `AdapterResponse` / `AdapterChunk` shape (see Schemas below) that every vendor adapter normalizes into, so callers write against one interface regardless of which provider answers the call.
+
+---
+
 ## Why AAP
 
 - **One shape** for OpenAI, Anthropic, Google, xAI, DeepSeek, Ollama, OpenRouter, and custom adapters.
