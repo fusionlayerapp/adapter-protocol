@@ -1,0 +1,9 @@
+{
+  "_description": "AdapterChunk: token usage event, typically emitted at end of stream.",
+  "_schema": "chunk",
+  "type": "usage",
+  "usage": {
+    "input_tokens": 10,
+    "output_tokens": 5
+  }
+}

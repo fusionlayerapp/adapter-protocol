@@ -1,0 +1,31 @@
+{
+  "_description": "AdapterRequest exercising every optional field: temperature, maxTokens, tools, stream, systemPrompt, reasoning.",
+  "_schema": "request",
+  "model": "gpt-4o",
+  "messages": [
+    { "role": "system", "content": "You are a code assistant." },
+    { "role": "user", "content": "Write a function to reverse a string." }
+  ],
+  "apiKey": "sk-test-key-full",
+  "systemPrompt": "Respond only in JavaScript.",
+  "temperature": 0.7,
+  "maxTokens": 512,
+  "stream": true,
+  "reasoning": "medium",
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "run_code",
+        "description": "Execute code in a sandbox.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" }
+          },
+          "required": ["code"]
+        }
+      }
+    }
+  ]
+}

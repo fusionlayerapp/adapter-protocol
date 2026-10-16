@@ -1,0 +1,22 @@
+{
+  "_description": "AdapterResponse where the model requested a tool call.",
+  "_schema": "response",
+  "content": "",
+  "model": "claude-3-5-sonnet-20241022",
+  "usage": {
+    "input_tokens": 312,
+    "output_tokens": 45
+  },
+  "costUsd": 0.000534,
+  "stopReason": "tool_use",
+  "toolCalls": [
+    {
+      "id": "call_abc123",
+      "type": "function",
+      "function": {
+        "name": "get_weather",
+        "arguments": "{\"location\":\"London\",\"unit\":\"celsius\"}"
+      }
+    }
+  ]
+}

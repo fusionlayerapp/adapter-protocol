@@ -1,0 +1,33 @@
+{
+  "name": "openai-chat-completion-streaming",
+  "request": {
+    "path": "/v1/chat/completions",
+    "method": "POST",
+    "body_match": { "stream": true }
+  },
+  "response": {
+    "status": 200,
+    "headers": { "content-type": "text/event-stream" },
+    "body_sse": [
+      { "data": { "id": "chatcmpl-s1", "object": "chat.completion.chunk", "choices": [{ "index": 0, "delta": { "role": "assistant", "content": "Hello" }, "finish_reason": null }] } },
+      { "data": { "id": "chatcmpl-s1", "object": "chat.completion.chunk", "choices": [{ "index": 0, "delta": { "content": " world" }, "finish_reason": null }] } },
+      { "data": { "id": "chatcmpl-s1", "object": "chat.completion.chunk", "choices": [{ "index": 0, "delta": {}, "finish_reason": "stop" }], "usage": { "prompt_tokens": 10, "completion_tokens": 2 } } },
+      { "data": "[DONE]" }
+    ]
+  },
+  "_scenario": {
+    "id": 2,
+    "label": "streaming",
+    "description": "Chat completion — streaming, validates chunk schema per chunk",
+    "input": {
+      "model": "gpt-4o-mini",
+      "messages": [{ "role": "user", "content": "Hello" }],
+      "apiKey": "sk-test",
+      "stream": true
+    },
+    "assertions": {
+      "chunk_types": ["content", "content", "done"],
+      "assembled_content": "Hello world"
+    }
+  }
+}

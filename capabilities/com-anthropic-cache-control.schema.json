@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hn2.github.io/adapter-protocol/capabilities/com-anthropic-cache-control",
+  "title": "com.anthropic.cache_control capability value",
+  "description": "Describes prompt-caching / cache-breakpoint configuration passed to Anthropic adapters.",
+  "type": "object",
+  "properties": {
+    "cache_type": {
+      "type": "string",
+      "enum": ["ephemeral"],
+      "description": "The cache lifetime tier. Currently only 'ephemeral' (5-minute TTL) is supported by Anthropic."
+    }
+  },
+  "required": ["cache_type"],
+  "additionalProperties": false
+}

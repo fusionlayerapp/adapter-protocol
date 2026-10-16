@@ -1,0 +1,11 @@
+{
+  "_description": "INVALID: AdapterResponse missing required 'content' field. Must fail validation.",
+  "_schema": "response",
+  "_expect": "invalid",
+  "model": "gpt-4o",
+  "usage": {
+    "input_tokens": 10,
+    "output_tokens": 5
+  },
+  "costUsd": 0.0001
+}

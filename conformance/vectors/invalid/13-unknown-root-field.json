@@ -1,0 +1,11 @@
+{
+  "_description": "INVALID: AdapterRequest with an extra root-level field 'userId' violates additionalProperties: false. Must fail validation.",
+  "_schema": "request",
+  "_expect": "invalid",
+  "model": "gpt-4o",
+  "messages": [
+    { "role": "user", "content": "Hello" }
+  ],
+  "apiKey": "test-key",
+  "userId": "user_abc123"
+}

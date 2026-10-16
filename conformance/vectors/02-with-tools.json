@@ -1,0 +1,33 @@
+{
+  "_description": "AdapterRequest with a tools array. Requires adapter to declare 'tools' capability.",
+  "_schema": "request",
+  "model": "claude-3-5-sonnet",
+  "messages": [
+    { "role": "user", "content": "What is the weather in London?" }
+  ],
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "get_weather",
+        "description": "Get the current weather for a given location.",
+        "parameters": {
+          "type": "object",
+          "required": ["location"],
+          "properties": {
+            "location": {
+              "type": "string",
+              "description": "City name or coordinates."
+            },
+            "unit": {
+              "type": "string",
+              "enum": ["celsius", "fahrenheit"],
+              "description": "Temperature unit."
+            }
+          }
+        }
+      }
+    }
+  ],
+  "apiKey": "test-key"
+}

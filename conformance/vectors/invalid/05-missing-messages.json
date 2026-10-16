@@ -1,0 +1,7 @@
+{
+  "_description": "INVALID: AdapterRequest with model and apiKey but no messages field. Must fail validation.",
+  "_schema": "request",
+  "_expect": "invalid",
+  "model": "gpt-4o",
+  "apiKey": "test-key"
+}

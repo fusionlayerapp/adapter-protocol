@@ -1,0 +1,5 @@
+{
+  "_description": "CapabilitiesManifest: minimal array with a single capability.",
+  "_schema": "capabilities",
+  "_value": ["streaming"]
+}

@@ -1,0 +1,8 @@
+{
+  "_description": "INVALID: AdapterRequest with messages: [] violates minItems: 1. Must fail validation.",
+  "_schema": "request",
+  "_expect": "invalid",
+  "model": "claude-3-5-sonnet",
+  "messages": [],
+  "apiKey": "test-key"
+}

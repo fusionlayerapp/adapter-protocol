@@ -1,0 +1,25 @@
+{
+  "name": "capabilities-check",
+  "request": {
+    "path": "/v1/models",
+    "method": "GET",
+    "body_match": {}
+  },
+  "response": {
+    "status": 200,
+    "headers": { "content-type": "application/json" },
+    "body": {
+      "object": "list",
+      "data": [{ "id": "gpt-4o-mini", "object": "model" }]
+    }
+  },
+  "_scenario": {
+    "id": 4,
+    "label": "capabilities",
+    "description": "Capabilities endpoint — adapter reports vendor capabilities correctly",
+    "assertions": {
+      "has_streaming": true,
+      "capabilities_is_array": true
+    }
+  }
+}

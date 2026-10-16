@@ -1,0 +1,11 @@
+{
+  "_description": "Minimal valid AdapterResponse: content, model, usage, costUsd only.",
+  "_schema": "response",
+  "content": "The answer is 42.",
+  "model": "gpt-4o-mini",
+  "usage": {
+    "input_tokens": 100,
+    "output_tokens": 50
+  },
+  "costUsd": 0.001
+}

@@ -1,0 +1,10 @@
+{
+  "_description": "INVALID: message with role 'bot' is not in the allowed enum (user, assistant, system, tool). Must fail validation.",
+  "_schema": "request",
+  "_expect": "invalid",
+  "model": "gpt-4o-mini",
+  "messages": [
+    { "role": "bot", "content": "Hello there" }
+  ],
+  "apiKey": "test-key"
+}

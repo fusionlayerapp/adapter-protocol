@@ -1,0 +1,46 @@
+{
+  "name": "image-input-multimodal",
+  "request": {
+    "path": "/v1/chat/completions",
+    "method": "POST",
+    "body_match": {}
+  },
+  "response": {
+    "status": 200,
+    "headers": { "content-type": "application/json" },
+    "body": {
+      "id": "chatcmpl-img001",
+      "object": "chat.completion",
+      "model": "gpt-4o",
+      "choices": [
+        {
+          "index": 0,
+          "message": { "role": "assistant", "content": "I see a cat in the image." },
+          "finish_reason": "stop"
+        }
+      ],
+      "usage": { "prompt_tokens": 100, "completion_tokens": 10, "total_tokens": 110 }
+    }
+  },
+  "_scenario": {
+    "id": 9,
+    "label": "image-input",
+    "description": "Image input — multimodal request, adapter encodes per spec",
+    "input": {
+      "model": "gpt-4o",
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            { "type": "text", "text": "What is in this image?" },
+            { "type": "image_url", "image_url": { "url": "data:image/png;base64,iVBORw0KGgo=" } }
+          ]
+        }
+      ],
+      "apiKey": "sk-test"
+    },
+    "assertions": {
+      "content": "I see a cat in the image."
+    }
+  }
+}

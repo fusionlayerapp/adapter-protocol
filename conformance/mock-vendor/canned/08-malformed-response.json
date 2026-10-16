@@ -1,0 +1,27 @@
+{
+  "name": "malformed-response",
+  "request": {
+    "path": "/v1/chat/completions",
+    "method": "POST",
+    "body_match": {}
+  },
+  "response": {
+    "status": 200,
+    "headers": { "content-type": "application/json" },
+    "body_raw": "this is not valid json {"
+  },
+  "_scenario": {
+    "id": 8,
+    "label": "malformed-response",
+    "description": "Malformed response — mock returns invalid JSON, adapter raises typed parse error",
+    "input": {
+      "model": "gpt-4o-mini",
+      "messages": [{ "role": "user", "content": "Hello" }],
+      "apiKey": "sk-test"
+    },
+    "assertions": {
+      "throws": true,
+      "error_code": "unknown"
+    }
+  }
+}

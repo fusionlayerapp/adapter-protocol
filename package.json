@@ -1,0 +1,20 @@
+{
+  "name": "@fusionlayer/adapter-protocol",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "license": "SEE LICENSE IN LICENSE",
+  "description": "Vendor Adapter Protocol — Normative Specification, Schemas, and Conformance Suite",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fusionlayerapp/adapter-protocol.git"
+  },
+  "scripts": {
+    "validate": "node conformance/validate.js",
+    "test": "node conformance/validate.js"
+  },
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1"
+  }
+}

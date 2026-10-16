@@ -1,0 +1,5 @@
+{
+  "_description": "AdapterChunk: stream terminator emitted at end of every successful stream.",
+  "_schema": "chunk",
+  "type": "done"
+}

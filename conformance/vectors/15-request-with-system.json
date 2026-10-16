@@ -1,0 +1,10 @@
+{
+  "_description": "AdapterRequest with a systemPrompt providing context to the model.",
+  "_schema": "request",
+  "model": "claude-3-5-haiku-20241022",
+  "messages": [
+    { "role": "user", "content": "What time zone should I use?" }
+  ],
+  "apiKey": "test-key",
+  "systemPrompt": "You are a helpful assistant. Always answer in UTC."
+}

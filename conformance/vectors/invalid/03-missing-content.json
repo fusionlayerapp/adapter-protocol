@@ -1,0 +1,10 @@
+{
+  "_description": "INVALID: message object is missing the required 'content' field. Must fail validation.",
+  "_schema": "request",
+  "_expect": "invalid",
+  "model": "claude-3-5-sonnet",
+  "messages": [
+    { "role": "user" }
+  ],
+  "apiKey": "test-key"
+}

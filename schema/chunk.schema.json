@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hn2.github.io/adapter-protocol/schema/1.0.0/chunk",
+  "title": "AdapterChunk",
+  "description": "Streaming event object yielded by VendorAdapter.stream().",
+  "type": "object",
+  "required": ["type"],
+  "unevaluatedProperties": false,
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": ["content", "usage", "tool_call", "error", "done"],
+      "description": "Event type."
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "type": { "const": "content" } } },
+      "then": {
+        "required": ["delta"],
+        "properties": {
+          "delta": {
+            "type": "string",
+            "description": "Incremental text delta."
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "usage" } } },
+      "then": {
+        "required": ["usage"],
+        "properties": {
+          "usage": {
+            "type": "object",
+            "required": ["input_tokens", "output_tokens"],
+            "additionalProperties": false,
+            "properties": {
+              "input_tokens": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "output_tokens": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "tool_call" } } },
+      "then": {
+        "required": ["toolCall"],
+        "properties": {
+          "toolCall": {
+            "type": "object",
+            "description": "The tool invocation requested by the model."
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "error" } } },
+      "then": {
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": ["code", "message"],
+            "additionalProperties": false,
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "rate_limited",
+                  "quota_exceeded",
+                  "invalid_api_key",
+                  "invalid_request",
+                  "context_too_long",
+                  "content_filtered",
+                  "upstream_timeout",
+                  "upstream_5xx",
+                  "unknown"
+                ]
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

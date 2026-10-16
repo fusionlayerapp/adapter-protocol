@@ -1,0 +1,27 @@
+{
+  "name": "empty-response",
+  "request": {
+    "path": "/v1/chat/completions",
+    "method": "POST",
+    "body_match": {}
+  },
+  "response": {
+    "status": 200,
+    "headers": { "content-type": "application/json" },
+    "body": {}
+  },
+  "_scenario": {
+    "id": 10,
+    "label": "empty-response",
+    "description": "Empty response — mock returns 200 {}, adapter raises typed empty-response error",
+    "input": {
+      "model": "gpt-4o-mini",
+      "messages": [{ "role": "user", "content": "Hello" }],
+      "apiKey": "sk-test"
+    },
+    "assertions": {
+      "throws": true,
+      "error_code": "unknown"
+    }
+  }
+}

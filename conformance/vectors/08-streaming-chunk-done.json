@@ -1,0 +1,5 @@
+{
+  "_description": "AdapterChunk: stream terminator. Every stream MUST end with exactly one 'done' chunk.",
+  "_schema": "chunk",
+  "type": "done"
+}
