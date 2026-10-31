@@ -9,6 +9,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import AjvPkg from 'ajv/dist/2020.js'
 import addFormats from 'ajv-formats'
+import { ADAPTER_ERROR_CATALOG, lookupAdapterError } from './errors.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -466,18 +467,136 @@ async function runL2(adapterPath) {
   }
 }
 
+export function runAdapterDoctor() {
+  const ajv = loadAjv()
+  const schemaCount = Object.keys(SCHEMA_MAP).filter((k) => Boolean(ajv.getSchema(SCHEMA_MAP[k]))).length
+  const checks = [
+    { name: 'json_schemas_loaded', status: schemaCount === 4 ? 'ok' : 'error', detail: `${schemaCount}/4 Adapter Protocol 1.0 schemas compiled` },
+    { name: 'error_catalog', status: Object.keys(ADAPTER_ERROR_CATALOG).length >= 6 ? 'ok' : 'error', detail: `${Object.keys(ADAPTER_ERROR_CATALOG).length} structured error codes registered` },
+  ]
+  return { healthy: checks.every((c) => c.status === 'ok'), protocol: 'AdapterProtocol/1.0', checks }
+}
+
+export function inspectAdapterFile(filePath) {
+  const ajv = loadAjv()
+  const doc = JSON.parse(fs.readFileSync(filePath, 'utf8'))
+  const schemaKey = doc._schema || 'request'
+  const schemaId = SCHEMA_MAP[schemaKey]
+  const payload = '_value' in doc ? doc._value : stripMeta(doc)
+  const valid = schemaId ? ajv.validate(schemaId, payload) : false
+  return {
+    protocol: 'AdapterProtocol/1.0',
+    file: filePath,
+    schemaKey,
+    valid: Boolean(valid),
+    errors: (ajv.errors || []).map((e) => `${e.instancePath || '(root)'} ${e.message}`),
+  }
+}
+
+export function writeAdapterOutputFile(filePath, payload, textOutput, { append = false } = {}) {
+  if (!filePath) return null
+  const abs = path.resolve(filePath)
+  fs.mkdirSync(path.dirname(abs), { recursive: true })
+  const lower = abs.toLowerCase()
+  const nl = '\n'
+  if (append || lower.endsWith('.jsonl') || lower.endsWith('.ndjson')) {
+    const line = JSON.stringify(payload !== undefined ? payload : { output: textOutput }) + nl
+    if (append) fs.appendFileSync(abs, line, 'utf8')
+    else fs.writeFileSync(abs, line, 'utf8')
+    return abs
+  }
+  const content =
+    lower.endsWith('.json') && payload !== undefined
+      ? JSON.stringify(payload, null, 2) + nl
+      : String(textOutput ?? JSON.stringify(payload, null, 2)) + (String(textOutput ?? '').endsWith(nl) ? '' : nl)
+  fs.writeFileSync(abs, content, 'utf8')
+  return abs
+}
+
+function extractOption(argv, flags) {
+  let value = null
+  const rest = []
+  for (let i = 0; i < argv.length; i += 1) {
+    const token = argv[i]
+    const eqFlag = flags.find((f) => token.startsWith(`${f}=`))
+    if (eqFlag) {
+      value = token.slice(eqFlag.length + 1)
+      continue
+    }
+    if (flags.includes(token)) {
+      if (i + 1 < argv.length) {
+        value = argv[i + 1]
+        i += 1
+      }
+      continue
+    }
+    rest.push(token)
+  }
+  return { value, rest }
+}
+
+export { ADAPTER_ERROR_CATALOG, lookupAdapterError }
+
 // ---------- main ----------
 
-const args = process.argv.slice(2)
-const runL2Flag = args.includes('--l2')
-const adapterArgIdx = args.indexOf('--adapter')
-const adapterPath = adapterArgIdx !== -1 ? args[adapterArgIdx + 1] : null
+if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
+  const rawArgs = process.argv.slice(2)
+  const jsonFlag = rawArgs.includes('--json')
+  const appendFlag = rawArgs.includes('--append')
+  const stripped = rawArgs.filter((a) => a !== '--append')
+  const { value: outFile, rest: args } = extractOption(stripped, ['-o', '--out', '--output', '--log-file'])
+  const outputPath = outFile || process.env.ADAPTER_DIAG_OUTPUT_FILE || null
+  const cmd = args[0]
 
-if (runL2Flag) {
-  runL2(adapterPath).catch(err => {
-    console.error('L2 harness error:', err.message)
-    process.exit(1)
-  })
-} else {
-  runL1()
+  if (cmd === 'doctor') {
+    const doc = runAdapterDoctor()
+    const textOut = jsonFlag ? JSON.stringify(doc, null, 2) : `Adapter Protocol Doctor: ${doc.healthy ? 'HEALTHY' : 'UNHEALTHY'}`
+    console.log(textOut)
+    writeAdapterOutputFile(outputPath, doc, textOut, { append: appendFlag })
+    process.exit(doc.healthy ? 0 : 1)
+  } else if (cmd === 'errors') {
+    const code = args[1] && !args[1].startsWith('--') ? args[1] : null
+    if (code) {
+      const entry = lookupAdapterError(code)
+      if (!entry) {
+        const errMsg = `Unknown code: ${code}`
+        console.error(errMsg)
+        writeAdapterOutputFile(outputPath, { error: errMsg }, errMsg, { append: appendFlag })
+        process.exit(1)
+      }
+      const textOut = JSON.stringify(entry, null, 2)
+      console.log(textOut)
+      writeAdapterOutputFile(outputPath, entry, textOut, { append: appendFlag })
+      process.exit(0)
+    }
+    const all = Object.values(ADAPTER_ERROR_CATALOG)
+    const textOut = JSON.stringify(all, null, 2)
+    console.log(textOut)
+    writeAdapterOutputFile(outputPath, all, textOut, { append: appendFlag })
+    process.exit(0)
+  } else if (cmd === 'inspect') {
+    const target = args[1]
+    if (!target) {
+      console.error('Usage: node conformance/validate.js inspect <file> [-o|--output <file>]')
+      process.exit(2)
+    }
+    const info = inspectAdapterFile(target)
+    const textOut = JSON.stringify(info, null, 2)
+    console.log(textOut)
+    writeAdapterOutputFile(outputPath, info, textOut, { append: appendFlag })
+    process.exit(info.valid ? 0 : 1)
+  } else {
+    const runL2Flag = args.includes('--l2')
+    const adapterArgIdx = args.indexOf('--adapter')
+    const adapterPath = adapterArgIdx !== -1 ? args[adapterArgIdx + 1] : null
+
+    if (runL2Flag) {
+      runL2(adapterPath).catch(err => {
+        console.error('L2 harness error:', err.message)
+        process.exit(1)
+      })
+    } else {
+      runL1()
+    }
+  }
 }
