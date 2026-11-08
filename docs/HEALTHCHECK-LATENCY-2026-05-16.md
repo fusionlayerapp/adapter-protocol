@@ -1,5 +1,8 @@
 # healthCheck() + Latency Budget Tests
 
+> **Historical (2026-05-16).** Since written, `healthCheck()` was added to all four functional adapters in hn2/fusionlayer main (0601ce2f); the "do not export healthCheck" statements below describe the state at the time.
+
+
 **Issues:** hn2/adapter-protocol#3 (A1), hn2/adapter-protocol#4 (A2)  
 **Batch:** Sonnet overnight 2026-05-16  
 **Status:** In progress
