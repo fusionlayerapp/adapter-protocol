@@ -1,7 +1,4 @@
-# Conformance Report — FusionLayer / OpenAI
-
-> **Historical report (2026-05).** It does not record the engine commit it was run against. The healthCheck finding below is out of date: `healthCheck` is exported by this adapter in hn2/fusionlayer main (0601ce2f, checked by source search, harness not re-run). A regenerated report with the engine commit is pending.
-
+# Conformance Report — FusionLayer / Openai
 
 ## Adapter
 
@@ -9,44 +6,35 @@
 **Repository:** hn2/fusionlayer (private)
 **AAP version conformed to:** v1.0.0
 **Levels claimed:** L1
+**Engine commit:** `7141f6c2478c43252f821a4e433406a2f52671a5`
 
 ## Levels Passed
 
 ### L1 — Static Shape
 
-The adapter exports `vendorId: "openai"`, `capabilities` (object), `call` (function), and `stream` (function). The adapter does NOT export `healthCheck`.
-
 | Check | Result | Notes |
 |-------|--------|-------|
-| vendorId in KNOWN\_VENDORS | PASS | `openai` |
-| capabilities declared | PASS | exported as object; see deviation |
-| call is a function | PASS | |
-| healthCheck is a function | FAIL | not exported |
-| stream is a function (streaming declared) | PASS | |
+| vendorId in KNOWN_VENDORS | PASS | `openai` |
+| capabilities declared | PASS | exported as array |
+| call is a function | PASS |  |
+| healthCheck is a function | PASS | exported |
+| stream is a function (streaming declared) | PASS |  |
 
 ### L2 — Mock-Vendor Harness
 
-L2 via protocol compatibility. The OpenAI adapter uses the standard OpenAI-compatible wire format; the L2 reference adapter (built into this harness) implements the same protocol and passes all 10 scenarios. However, the FusionLayer `openai.js` adapter cannot be directly loaded by the harness because:
-1. It uses ES module syntax (`export`) — the harness is CommonJS.
-2. The `call()` signature differs from `AdapterRequest`.
-
-A wrapped CommonJS adapter shim would enable direct L2 harness testing. Deferred to follow-up.
+L2 not run by this generator (it only measures static shape).
 
 ## Known Deviations
 
 | Deviation | Severity | Rationale |
 |-----------|----------|-----------|
-| ES module (`export`) instead of CommonJS | Medium | Adapter cannot be directly `require()`d by the harness. Shim needed. |
-| `capabilities` is an object, not an array | Low | Same pattern across all FusionLayer adapters. |
-| No `healthCheck()` method | Medium | Not implemented. |
-| `call()` signature is `{ modelName, messages, baseUrl, apiKey, ... }` | Medium | Wrapper required to bridge to AdapterRequest. |
-| No typed error codes (`err.code`) | Medium | Raw error messages only. |
-| Response uses `cost_usd` not `costUsd` | Low | Field name divergence. |
+| `call()` signature is `{ modelName, messages, ... }` not `AdapterRequest` | Medium | Field names differ from the AAP request shape. |
+| No typed error codes (`err.code`) verified | Medium | Not checked by this static report; no claim is made. |
 
 ## Date Verified
 
-2026-05-16
+2026-11-08
 
 ## Commit Hash
 
-Verified against hn2/fusionlayer at commit: see hn2/adapter-protocol#1 for details.
+Verified against hn2/fusionlayer at commit `7141f6c2478c43252f821a4e433406a2f52671a5` with `conformance/tools/generate-engine-report.mjs`.

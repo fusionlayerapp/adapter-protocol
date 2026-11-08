@@ -1,71 +1,41 @@
-# Conformance Report — FusionLayer / OpenRouter
-
-> **Historical report (2026-05).** It does not record the engine commit it was run against. The healthCheck finding below is out of date: `healthCheck` is exported by this adapter in hn2/fusionlayer main (0601ce2f, checked by source search, harness not re-run). A regenerated report with the engine commit is pending.
-
+# Conformance Report — FusionLayer / Openrouter
 
 ## Adapter
 
-**Adapter source location:** `packages/server/src/adapters/openrouter.js` (re-exports from `openai.js`)
+**Adapter source location:** `packages/server/src/adapters/openrouter.js`
 **Repository:** hn2/fusionlayer (private)
 **AAP version conformed to:** v1.0.0
-**Levels claimed:** L1, L2
+**Levels claimed:** L1
+**Engine commit:** `7141f6c2478c43252f821a4e433406a2f52671a5`
 
 ## Levels Passed
 
 ### L1 — Static Shape
 
-The adapter exports `vendorId: "openrouter"`, `capabilities` (object), `call` (function), and `stream` (function). The adapter does NOT export `healthCheck`.
-
 | Check | Result | Notes |
 |-------|--------|-------|
-| vendorId in KNOWN\_VENDORS | PASS | `openrouter` |
-| capabilities declared | PASS | exported as object; see deviation below |
-| call is a function | PASS | |
-| healthCheck is a function | FAIL | not exported |
-| stream is a function (streaming declared) | PASS | |
-
-L1 claimed with known deviation on `healthCheck`.
+| vendorId in KNOWN_VENDORS | PASS | `openrouter` |
+| capabilities declared | PASS | exported as object |
+| call is a function | PASS |  |
+| healthCheck is a function | PASS | exported |
+| stream is a function (streaming declared) | PASS |  |
 
 ### L2 — Mock-Vendor Harness
 
-The FusionLayer OpenRouter adapter re-exports `call` and `stream` from the OpenAI-compatible adapter, which uses the same request/response format. The L2 harness reference adapter (OpenAI-compatible) was run against the mock vendor directly.
-
-All 10 L2 scenarios passed with the reference adapter, confirming the underlying protocol compatibility.
-
-The FusionLayer adapter itself was NOT wired through the L2 harness because:
-1. It does not export a `createAdapter({ baseURL, apiKey })` factory.
-2. The `call()` function signature takes `{ modelName, messages, baseUrl, apiKey, ... }` not `AdapterRequest`.
-3. It reads `apiKey` from the function argument, making it compatible with baseURL injection.
-
-**Status: L2 claimed via protocol-level compatibility (OpenAI-compatible wire format confirmed by harness).**
-
-## Mock-Vendor Scenarios Passed (Reference Adapter)
-
-1. chat-happy — PASS
-2. streaming — PASS
-3. tool-call — PASS
-4. capabilities — PASS
-5. auth-failure — PASS (correctly throws on 401)
-6. rate-limit — PASS (correctly throws on 429)
-7. timeout — PASS (correctly throws on timeout)
-8. malformed-response — PASS (correctly throws on invalid JSON)
-9. image-input — PASS
-10. empty-response — PASS (correctly throws on empty body)
+L2 not run by this generator (it only measures static shape).
 
 ## Known Deviations
 
 | Deviation | Severity | Rationale |
 |-----------|----------|-----------|
-| `capabilities` is an object, not an array | Low | FusionLayer's internal capability map `{ streaming: true, ... }` differs from AAP's `["streaming", ...]` array. Engine converts internally. |
-| No `healthCheck()` method | Medium | Method not implemented. Engine performs its own uptime checks separately. |
-| `call()` signature is `{ modelName, messages, baseUrl, ... }` not `AdapterRequest` | Medium | FusionLayer uses `modelName` (not `model`) and passes `baseUrl` explicitly. Adapter is wrapped by the engine before use. |
-| No typed error codes (`err.code`) | Medium | Adapter throws raw `Error` with HTTP status in message. Engine normalizes at call site. |
-| Response uses `cost_usd` not `costUsd` | Low | Camel case divergence. Engine normalizes field name. |
+| `capabilities` is an object, not an array | Low | Declared as an object keyed by capability. |
+| `call()` signature is `{ modelName, messages, ... }` not `AdapterRequest` | Medium | Field names differ from the AAP request shape. |
+| No typed error codes (`err.code`) verified | Medium | Not checked by this static report; no claim is made. |
 
 ## Date Verified
 
-2026-05-16
+2026-11-08
 
 ## Commit Hash
 
-Verified against hn2/fusionlayer at commit: see hn2/adapter-protocol#1 for details.
+Verified against hn2/fusionlayer at commit `7141f6c2478c43252f821a4e433406a2f52671a5` with `conformance/tools/generate-engine-report.mjs`.
