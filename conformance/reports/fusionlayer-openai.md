@@ -1,5 +1,8 @@
 # Conformance Report — FusionLayer / OpenAI
 
+> **Historical report (2026-05).** It does not record the engine commit it was run against. The healthCheck finding below is out of date: `healthCheck` is exported by this adapter in hn2/fusionlayer main (0601ce2f, checked by source search, harness not re-run). A regenerated report with the engine commit is pending.
+
+
 ## Adapter
 
 **Adapter source location:** `packages/server/src/adapters/openai.js`
