@@ -12,7 +12,8 @@
   "scripts": {
     "validate": "node conformance/validate.js",
     "check:doc-paths": "node scripts/check-doc-paths.mjs",
-    "test": "node conformance/validate.js"
+    "test:harness": "node --test \"conformance/harness/*.test.js\"",
+    "test": "node conformance/validate.js && npm run check:doc-paths && npm run test:harness"
   },
   "dependencies": {
     "ajv": "^8.12.0",
