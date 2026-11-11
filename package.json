@@ -11,6 +11,7 @@
   },
   "scripts": {
     "validate": "node conformance/validate.js",
+    "check:doc-paths": "node scripts/check-doc-paths.mjs",
     "test": "node conformance/validate.js"
   },
   "dependencies": {

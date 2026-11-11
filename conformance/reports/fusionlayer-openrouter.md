@@ -1,7 +1,6 @@
 # Conformance Report — FusionLayer / OpenRouter
 
-> **Historical report (2026-05).** It does not record the engine commit it was run against. The healthCheck finding below is out of date: `healthCheck` is exported by this adapter in hn2/fusionlayer main (0601ce2f, checked by source search, harness not re-run). A regenerated report with the engine commit is pending.
-
+> **Updated 2026-11-11 (#19 follow-up).** Re-verified by source inspection against hn2/fusionlayer main commit `6831e450226abf33f21ef1b6c985c8805776fdf4` (2026-11-10). The L2 mock-vendor harness was NOT re-run against the real adapter (same blockers as 2026-05: no `createAdapter()` factory, `call()` signature differs from `AdapterRequest`); the reference-adapter protocol-compatibility run below is unchanged. `healthCheck` is confirmed exported (`openrouter.js:9`), resolving that deviation. Unlike the other three FusionLayer adapters, `capabilities` here is still an object, not an array — that deviation stands.
 
 ## Adapter
 
@@ -14,17 +13,17 @@
 
 ### L1 — Static Shape
 
-The adapter exports `vendorId: "openrouter"`, `capabilities` (object), `call` (function), and `stream` (function). The adapter does NOT export `healthCheck`.
+The adapter exports `vendorId: "openrouter"`, `capabilities` (object), `call` (function), `stream` (function), and `healthCheck` (function).
 
 | Check | Result | Notes |
 |-------|--------|-------|
 | vendorId in KNOWN\_VENDORS | PASS | `openrouter` |
 | capabilities declared | PASS | exported as object; see deviation below |
 | call is a function | PASS | |
-| healthCheck is a function | FAIL | not exported |
+| healthCheck is a function | PASS | `openrouter.js:9` |
 | stream is a function (streaming declared) | PASS | |
 
-L1 claimed with known deviation on `healthCheck`.
+L1 claimed; the only remaining known deviation is the `capabilities` shape (below).
 
 ### L2 — Mock-Vendor Harness
 
@@ -56,16 +55,21 @@ The FusionLayer adapter itself was NOT wired through the L2 harness because:
 
 | Deviation | Severity | Rationale |
 |-----------|----------|-----------|
-| `capabilities` is an object, not an array | Low | FusionLayer's internal capability map `{ streaming: true, ... }` differs from AAP's `["streaming", ...]` array. Engine converts internally. |
-| No `healthCheck()` method | Medium | Method not implemented. Engine performs its own uptime checks separately. |
+| `capabilities` is an object, not an array | Low | FusionLayer's internal capability map `{ streaming: true, ... }` differs from AAP's `["streaming", ...]` array. Engine converts internally. Still true as of 2026-11-11 (unlike anthropic/google/openai, which now export arrays). |
 | `call()` signature is `{ modelName, messages, baseUrl, ... }` not `AdapterRequest` | Medium | FusionLayer uses `modelName` (not `model`) and passes `baseUrl` explicitly. Adapter is wrapped by the engine before use. |
 | No typed error codes (`err.code`) | Medium | Adapter throws raw `Error` with HTTP status in message. Engine normalizes at call site. |
 | Response uses `cost_usd` not `costUsd` | Low | Camel case divergence. Engine normalizes field name. |
 
+**Resolved since 2026-05:** `healthCheck()` is now implemented (`openrouter.js:9`).
+
 ## Date Verified
+
+2026-11-11 (source inspection; L2 harness not re-run against the real adapter — see above)
+
+## Previous Verification
 
 2026-05-16
 
 ## Commit Hash
 
-Verified against hn2/fusionlayer at commit: see hn2/adapter-protocol#1 for details.
+Engine commit: `6831e450226abf33f21ef1b6c985c8805776fdf4` (hn2/fusionlayer main, 2026-11-10). Previous verification: see hn2/adapter-protocol#1.
