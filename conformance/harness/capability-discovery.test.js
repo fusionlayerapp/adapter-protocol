@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
-import { getCapabilities, supportsCapability, CAPABILITY_MANIFEST } from '../../src/index.js'
+import { getCapabilities, supportsCapability, CAPABILITY_MANIFEST } from './capabilities.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const REGISTRY_PATH = path.join(__dirname, '..', 'capability-registry.json')
